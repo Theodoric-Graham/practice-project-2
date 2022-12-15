@@ -14,9 +14,19 @@ const Login = (props) => {
   //there to handle side effects, checking and updating form validity in
   //response to a key stroke in the email or password field, it is a side effect of user entering data
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes("@") && enteredPassword.trim().length > 6
-    );
+    const identifier = setTimeout(() => {
+      console.log("checking form validity");
+      setFormIsValid(
+        enteredEmail.includes("@") && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    //cleanup function
+    return () => {
+      console.log("cleanup");
+      clearTimeout(identifier);
+    };
+
     //reruns whenever one of these dependencies is changed
   }, [enteredEmail, enteredPassword]);
 

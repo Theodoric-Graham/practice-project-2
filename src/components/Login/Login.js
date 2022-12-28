@@ -11,6 +11,18 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  //useEffect runs after every rerender cycle, not before and not during
+  //empty brackets will make it so that it will only run once at the start when the component is rendered
+  //adding a dependancy will make it so that the function reruns when the component is reevaluated and when enteredPassword changes
+  useEffect(() => {
+    console.log("EFFECT RUNNING");
+
+    //cleanup function runs before this state function as a whole runs, but not before the first time it runs
+    return () => {
+      console.log("EFFECT CLEANUP");
+    };
+  }, []);
+
   //there to handle side effects, checking and updating form validity in
   //response to a key stroke in the email or password field, it is a side effect of user entering data
   useEffect(() => {

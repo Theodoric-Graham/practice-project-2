@@ -4,6 +4,9 @@ import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 
+//can live outside of the component function since we dont need any data thats generated inside of the component function
+//the data that will be used, will be passed into this function when its executed by react automatically
+//first arg is the state snapshot, and the second is the action we dispatched
 const emailReducer = (state, action) => {
   if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.includes("@") };
@@ -57,31 +60,32 @@ const Login = (props) => {
     };
   }, []);
 
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+
   //there to handle side effects, checking and updating form validity in
   //response to a key stroke in the email or password field, it is a side effect of user entering data
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("checking form validity");
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("checking form validity");
+      setFormIsValid(emailIsValid && passwordIsValid);
+    }, 500);
 
-  //   //cleanup function
-  //   return () => {
-  //     console.log("cleanup");
-  //     clearTimeout(identifier);
-  //   };
+    //cleanup function
+    return () => {
+      console.log("cleanup");
+      clearTimeout(identifier);
+    };
 
-  //   //reruns whenever one of these dependencies is changed
-  // }, [enteredEmail, enteredPassword]);
+    //reruns whenever one of these dependencies is changed
+  }, [emailIsValid, passwordIsValid]);
 
   //if you update a state using another state, then useReducer may be a good idea
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(emailState.value.includes("@") && passwordState.isValid);
+    // setFormIsValid(emailState.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
